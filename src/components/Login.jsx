@@ -9,23 +9,28 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    console.log(username, password);
-    fetch("https://dummyjson.com/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("userId", data.id);
-        navigate("/profile");
+    if (!username || !password) {
+      setError("Please enter both username and password");
+      return;
+    } else {
+      console.log(username, password);
+      fetch("https://dummyjson.com/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
       })
-      .catch(() => setError("Something went wrong"));
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("userId", data.id);
+          navigate("/profile");
+        })
+        .catch(() => setError("Something went wrong"));
+    }
   };
 
   return (
@@ -47,7 +52,7 @@ function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <button onClick={() => setOpen(!open)} className="password-button">
-            {open ? "😳" : "🙈"}  
+            {open ? "😳" : "🙈"}
           </button>
         </div>
         <button onClick={handleLogin} style={{ padding: "10px 20px" }}>
