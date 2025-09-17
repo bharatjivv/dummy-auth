@@ -12,25 +12,33 @@ function Login() {
     if (!username || !password) {
       setError("Please enter both username and password");
       return;
-    } else {
-      console.log(username, password);
-      fetch("https://dummyjson.com/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username,
-          password,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          localStorage.setItem("token", data.token);
-          localStorage.setItem("userId", data.id);
-          navigate("/profile");
-        })
-        .catch(() => setError("Something went wrong"));
     }
+
+    setError("");
+
+    fetch("https://dummyjson.com/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    })
+      .then(async (res) => {
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.message || "Invalid username or password");
+        }
+
+        return data;
+      })
+      .then((data) => {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("userId", data.id);
+
+        navigate("/profile");
+      })
+      .catch((err) => {
+        setError(err.message || "Something went wrong");
+      });
   };
 
   return (
