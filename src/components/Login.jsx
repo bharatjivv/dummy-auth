@@ -47,7 +47,7 @@ function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <button onClick={() => setOpen(!open)} className="password-button">
-            {open ? "😃" : "😵"}  
+            {open ? "😳" : "🙈"}  
           </button>
         </div>
         <button onClick={handleLogin} style={{ padding: "10px 20px" }}>
